@@ -10,7 +10,6 @@ export const parseStringify = <T>(value: T): T =>
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
-// FORMAT DATE TIME
 export const formatDateTime = (dateString: Date | string) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
     month: "short",

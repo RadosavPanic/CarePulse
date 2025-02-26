@@ -4,6 +4,16 @@ import React from "react";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { E164Number } from "libphonenumber-js/core";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+import { FormFieldType } from "./forms/PatientForm";
+import {
+  Control,
+  FieldValues,
+  ControllerRenderProps,
+  Path,
+} from "react-hook-form";
 
 import {
   FormControl,
@@ -13,15 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Control,
-  FieldValues,
-  ControllerRenderProps,
-  Path,
-} from "react-hook-form";
 
-import { FormFieldType } from "./forms/PatientForm";
 import Image from "next/image";
+import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
+import { Textarea } from "./ui/textarea";
 
 type CustomProps<T extends FieldValues> = {
   control: Control<T>;
@@ -36,7 +41,7 @@ type CustomProps<T extends FieldValues> = {
   showTimeSelect?: boolean;
   children?: React.ReactNode;
   renderSkeleton?: (
-    field: ControllerRenderProps<T, T[keyof T]>
+    field: ControllerRenderProps<T, Path<T>>
   ) => React.ReactNode;
 };
 
@@ -47,7 +52,15 @@ const RenderField = <T extends FieldValues>({
   field: ControllerRenderProps<T, Path<T>>;
   props: CustomProps<T>;
 }) => {
-  const { fieldType, iconSrc, iconAlt, placeholder } = props;
+  const {
+    fieldType,
+    iconSrc,
+    iconAlt,
+    placeholder,
+    showTimeSelect,
+    dateFormat,
+    renderSkeleton,
+  } = props;
 
   switch (fieldType) {
     case FormFieldType.INPUT:
@@ -74,6 +87,17 @@ const RenderField = <T extends FieldValues>({
           </FormControl>
         </div>
       );
+    case FormFieldType.TEXTAREA:
+      return (
+        <FormControl>
+          <Textarea
+            placeholder={placeholder}
+            {...field}
+            className="shad-textArea"
+            disabled={props.disabled}
+          />
+        </FormControl>
+      );
     case FormFieldType.PHONE_INPUT:
       return (
         <FormControl>
@@ -88,6 +112,45 @@ const RenderField = <T extends FieldValues>({
           />
         </FormControl>
       );
+    case FormFieldType.DATE_PICKER:
+      return (
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
+          <Image
+            src="/assets/icons/calendar.svg"
+            height={24}
+            width={24}
+            alt="calendar"
+            className="ml-2"
+          />
+          <FormControl>
+            <DatePicker
+              selected={field.value}
+              onChange={(date) => field.onChange(date)}
+              dateFormat={dateFormat ?? "MM/dd/yyyy"}
+              showTimeSelect={showTimeSelect ?? false}
+              timeInputLabel="Time:"
+              wrapperClassName="date-picker"
+            />
+          </FormControl>
+        </div>
+      );
+    case FormFieldType.SELECT:
+      return (
+        <FormControl>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl className="shad-select-trigger">
+              <SelectTrigger>
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className="shad-select-content">
+              {props.children}
+            </SelectContent>
+          </Select>
+        </FormControl>
+      );
+    case FormFieldType.SKELETON:
+      return renderSkeleton ? renderSkeleton(field) : null;
     default:
       break;
   }

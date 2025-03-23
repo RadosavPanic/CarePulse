@@ -26,7 +26,7 @@ interface DataTableProps<TData, TValue> {
 
 export default function DataTable<TData, TValue>({
   columns,
-  data,
+  data = [],
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -35,7 +35,9 @@ export default function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  console.log(table.getRowModel()?.rows.length);
+  console.log(table.getRowModel()?.rows?.length);
+  console.log("Production table data: ", data);
+  console.log("Columns: ", columns);
 
   return (
     <div className="data-table">
@@ -59,7 +61,7 @@ export default function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel()?.rows?.length ? (
+          {table?.getRowModel()?.rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

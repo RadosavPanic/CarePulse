@@ -35,6 +35,8 @@ export default function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  console.log(table.getRowModel()?.rows.length);
+
   return (
     <div className="data-table">
       <Table className="shad-table">
@@ -57,7 +59,7 @@ export default function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel()?.rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

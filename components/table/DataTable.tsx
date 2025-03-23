@@ -35,10 +35,6 @@ export default function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  console.log(table.getRowModel()?.rows?.length);
-  console.log("Production table data: ", data);
-  console.log("Columns: ", columns);
-
   return (
     <div className="data-table">
       <Table className="shad-table">

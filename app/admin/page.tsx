@@ -11,6 +11,8 @@ import { Appointment } from "@/types/appwrite.types";
 const Admin = async () => {
   const appointments = await getRecentAppointmentList();
   const data = appointments?.documents as Appointment[];
+  console.log("Appointments: ", appointments);
+  console.log("Appointments documents: ", appointments?.documents);
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
